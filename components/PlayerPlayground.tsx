@@ -4,11 +4,13 @@ import {
 } from "expo-speech-recognition";
 import { useState } from "react";
 import { Button, ScrollView, Text, View, StyleSheet } from "react-native";
+import { translateText } from "@/services/openai";
 
 function PlayerPlayground() {
   const [recognizing, setRecognizing] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [translation, setTranslation] = useState("");
+  const [isTranslating, setIsTranslating] = useState(false);
 
   useSpeechRecognitionEvent("start", () => setRecognizing(true));
   useSpeechRecognitionEvent("end", () => setRecognizing(false));
@@ -34,8 +36,18 @@ function PlayerPlayground() {
   };
 
   const handleTranslate = () => {
-    // Translation function will be implemented later
-  };
+    setIsTranslating(true);
+    try {
+      translateText(transcript)
+        .then((translatedText) => {
+          setTranslation(translatedText);
+        })
+    } catch (error) {
+      console.error("Translation error:", error);
+    } finally {
+      setIsTranslating(false);
+    };
+  }
 
   return (
     <View style={styles.container}>
