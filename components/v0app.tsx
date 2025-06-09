@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import Header from "./Header"
 
 const nationalities = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -62,9 +63,7 @@ export default function TranslationApp() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Translation Bridge</Text>
-      </View>
+      <Header />
 
       {/* Language Selectors */}
       <View style={styles.languageSection}>
@@ -166,17 +165,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f9fa",
-  },
-  header: {
-    paddingVertical: 20,
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e9ecef",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "600",
-    color: "#343a40",
   },
   languageSection: {
     flexDirection: "row",
