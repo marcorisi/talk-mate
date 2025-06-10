@@ -104,7 +104,7 @@ export default function TranslationApp() {
           <View style={styles.textBlocksContainer}>
             {/* Original Text Block */}
             <Card 
-              currentLanguage={currentLanguage} 
+              language={currentLanguage} 
               transcribedText={transcribedText} 
             />
 
