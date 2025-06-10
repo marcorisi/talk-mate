@@ -15,6 +15,8 @@ export default function Card({ language, transcribedText, isTranslated = false }
 
     const [isPlaying, setIsPlaying] = useState(false)
 
+    const textLabel = isTranslated ? "Translation" : "Original";
+
     const stop = () => {
         setIsPlaying(false)
         // Mock stopping - in real app, this would stop text-to-speech
@@ -28,13 +30,15 @@ export default function Card({ language, transcribedText, isTranslated = false }
 
     return (
         
-        <View style={[styles.textBlock, styles.originalTextBlock]}>
+        <View style={[styles.textBlock, isTranslated ? styles.translatedTextBlock : styles.originalTextBlock]}>
             <View style={styles.textBlockHeader}>
-            <Text style={styles.textLabel}>Original ({language.name})</Text>
+            <Text style={styles.textLabel}>{textLabel} ({language.name})</Text>
             <TouchableOpacity
                 style={[
                 styles.speakerButton,
-                isPlaying ? styles.speakerButtonActive : styles.speakerButtonInactive,
+                isPlaying 
+                    ? (isTranslated ? styles.speakerButtonActiveGreen : styles.speakerButtonActive)
+                    : styles.speakerButtonInactive,
                 ]}
                 onPress={isPlaying ? stop : play}
                 activeOpacity={0.7}
@@ -42,11 +46,11 @@ export default function Card({ language, transcribedText, isTranslated = false }
                 <Ionicons
                     name={isPlaying ? "volume-mute" : "volume-high"}
                     size={16}
-                    color={isPlaying ? "#3b82f6" : "#6b7280"}
+                    color={isPlaying ? isTranslated ? "#10b981" : "#3b82f6" : "#6b7280"}
                 />
             </TouchableOpacity>
             </View>
-            <Text style={styles.transcribedText}>{transcribedText}</Text>
+            <Text style={isTranslated ? styles.translatedText : styles.transcribedText}>{transcribedText}</Text>
             {isPlaying && <IsPlayingCardFooter isTranslated={isTranslated} />}
         </View>
     )
@@ -64,6 +68,10 @@ const styles = StyleSheet.create({
   originalTextBlock: {
     borderLeftWidth: 4,
     borderLeftColor: "#007bff",
+  },
+  translatedTextBlock: {
+    borderLeftWidth: 4,
+    borderLeftColor: "#28a745",
   },
   textBlockHeader: {
     flexDirection: "row",
@@ -92,6 +100,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#dcfce7",
   },
   transcribedText: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: "#343a40",
+  },
+translatedText: {
     fontSize: 16,
     lineHeight: 24,
     color: "#343a40",

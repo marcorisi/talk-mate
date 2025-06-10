@@ -110,27 +110,11 @@ export default function TranslationApp() {
 
             {/* Translated Text Block */}
             {!!translatedText && (
-              <View style={[styles.textBlock, styles.translatedTextBlock]}>
-                <View style={styles.textBlockHeader}>
-                  <Text style={styles.textLabel}>Translation ({targetLanguage.name})</Text>
-                  <TouchableOpacity
-                    style={[
-                      styles.speakerButton,
-                      isPlayingTranslated ? styles.speakerButtonActiveGreen : styles.speakerButtonInactive,
-                    ]}
-                    onPress={isPlayingTranslated ? stopTranslatedText : playTranslatedText}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons
-                      name={isPlayingTranslated ? "volume-mute" : "volume-high"}
-                      size={16}
-                      color={isPlayingTranslated ? "#10b981" : "#6b7280"}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.translatedText}>{translatedText}</Text>
-                {isPlayingTranslated && <IsPlayingCardFooter isTranslated={true}/>}
-              </View>
+              <Card 
+                language={targetLanguage} 
+                transcribedText={translatedText}
+                isTranslated={true} 
+              />
             )}
           </View>
         ) : (
