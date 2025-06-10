@@ -239,22 +239,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 4,
   },
-  swapButton: {
-    marginHorizontal: 16,
-    padding: 8,
-  },
-  speakerIndicator: {
-    alignItems: "center",
-    paddingVertical: 12,
-    backgroundColor: "#e3f2fd",
-    marginHorizontal: 20,
-    borderRadius: 8,
-  },
-  speakerText: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#1976d2",
-  },
   textContainer: {
     flex: 1,
     paddingHorizontal: 20,
@@ -279,9 +263,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderLeftWidth: 4,
     borderLeftColor: "#007bff",
-  },
-  translatedBlock: {
-    borderLeftColor: "#28a745",
   },
   textLabel: {
     fontSize: 12,
