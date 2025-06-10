@@ -29,19 +29,6 @@ export default function TranslationApp() {
   const [translatedText, setTranslatedText] = useState("")
   const [showLanguageSelector, setShowLanguageSelector] = useState(null)
 
-  const [isPlayingTranslated, setIsPlayingTranslated] = useState(false)
-
-  const playTranslatedText = () => {
-    setIsPlayingTranslated(true)
-    // Mock playing - in real app, this would use text-to-speech
-    setTimeout(() => setIsPlayingTranslated(false), 3000) // Auto stop after 3 seconds for demo
-  }
-
-  const stopTranslatedText = () => {
-    setIsPlayingTranslated(false)
-    // Mock stopping - in real app, this would stop text-to-speech
-  }
-
   const toggleSpeaker = () => {
     setCurrentSpeaker(currentSpeaker === 1 ? 2 : 1)
     setTranscribedText("")
@@ -202,23 +189,6 @@ const styles = StyleSheet.create({
     borderLeftWidth: 4,
     borderLeftColor: "#007bff",
   },
-  textLabel: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#6c757d",
-    marginBottom: 8,
-    textTransform: "uppercase",
-  },
-  transcribedText: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: "#343a40",
-  },
-  translatedText: {
-    fontSize: 16,
-    lineHeight: 24,
-    color: "#343a40",
-  },
   controlsContainer: {
     paddingHorizontal: 20,
     paddingVertical: 20,
@@ -301,33 +271,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-  },
-  translatedTextBlock: {
-    borderLeftWidth: 4,
-    borderLeftColor: "#28a745",
-  },
-  textBlockHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  speakerButton: {
-    padding: 8,
-    borderRadius: 20,
-  },
-  speakerButtonInactive: {
-    backgroundColor: "#f1f3f4",
-  },
-  speakerButtonActive: {
-    backgroundColor: "#dbeafe",
-  },
-  speakerButtonActiveGreen: {
-    backgroundColor: "#dcfce7",
-  },
-  originalTextBlock: {
-    borderLeftWidth: 4,
-    borderLeftColor: "#007bff",
   },
   textBlocksContainer: {
     paddingBottom: 20,
