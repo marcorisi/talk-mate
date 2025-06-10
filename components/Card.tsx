@@ -6,11 +6,11 @@ import IsPlayingCardFooter from './IsPlayingCardFooter';
 import { Language } from '@/src/domain';
 
 interface CardProps {
-    currentLanguage: Language;
+    language: Language;
     transcribedText?: string;
 }
 
-export default function Card({ currentLanguage, transcribedText }: CardProps) {
+export default function Card({ language, transcribedText }: CardProps) {
 
     const [isPlaying, setIsPlaying] = useState(false)
 
@@ -29,7 +29,7 @@ export default function Card({ currentLanguage, transcribedText }: CardProps) {
         
         <View style={[styles.textBlock, styles.originalTextBlock]}>
             <View style={styles.textBlockHeader}>
-            <Text style={styles.textLabel}>Original ({currentLanguage.name})</Text>
+            <Text style={styles.textLabel}>Original ({language.name})</Text>
             <TouchableOpacity
                 style={[
                 styles.speakerButton,
