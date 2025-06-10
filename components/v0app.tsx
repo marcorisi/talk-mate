@@ -5,6 +5,7 @@ import { Language } from "@/src/domain"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
+import IsPlayingCardFooter from "./IsPlayingCardFooter"
 
 const nationalities: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -131,17 +132,7 @@ export default function TranslationApp() {
                 </TouchableOpacity>
               </View>
               <Text style={styles.transcribedText}>{transcribedText}</Text>
-              {isPlayingOriginal && (
-                <View style={styles.playingIndicator}>
-                  <View style={styles.soundWave}>
-                    <View style={[styles.soundBar, styles.soundBar1]} />
-                    <View style={[styles.soundBar, styles.soundBar2]} />
-                    <View style={[styles.soundBar, styles.soundBar3]} />
-                    <View style={[styles.soundBar, styles.soundBar4]} />
-                  </View>
-                  <Text style={styles.playingText}>Playing...</Text>
-                </View>
-              )}
+              {isPlayingOriginal && <IsPlayingCardFooter isTranslated={false} />}
             </View>
 
             {/* Translated Text Block */}
@@ -165,17 +156,7 @@ export default function TranslationApp() {
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.translatedText}>{translatedText}</Text>
-                {isPlayingTranslated && (
-                  <View style={styles.playingIndicator}>
-                    <View style={styles.soundWave}>
-                      <View style={[styles.soundBar, styles.soundBarGreen1]} />
-                      <View style={[styles.soundBar, styles.soundBarGreen2]} />
-                      <View style={[styles.soundBar, styles.soundBarGreen3]} />
-                      <View style={[styles.soundBar, styles.soundBarGreen4]} />
-                    </View>
-                    <Text style={styles.playingTextGreen}>Playing...</Text>
-                  </View>
-                )}
+                {isPlayingTranslated && <IsPlayingCardFooter isTranslated={true}/>}
               </View>
             )}
           </View>
@@ -364,63 +345,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
-  },
-  playingIndicator: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginTop: 8,
-  },
-  soundWave: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 8,
-  },
-  soundBar: {
-    width: 2,
-    borderRadius: 1,
-    marginHorizontal: 1,
-  },
-  soundBar1: {
-    height: 12,
-    backgroundColor: "#3b82f6",
-  },
-  soundBar2: {
-    height: 16,
-    backgroundColor: "#3b82f6",
-  },
-  soundBar3: {
-    height: 8,
-    backgroundColor: "#3b82f6",
-  },
-  soundBar4: {
-    height: 12,
-    backgroundColor: "#3b82f6",
-  },
-  soundBarGreen1: {
-    height: 12,
-    backgroundColor: "#10b981",
-  },
-  soundBarGreen2: {
-    height: 16,
-    backgroundColor: "#10b981",
-  },
-  soundBarGreen3: {
-    height: 8,
-    backgroundColor: "#10b981",
-  },
-  soundBarGreen4: {
-    height: 12,
-    backgroundColor: "#10b981",
-  },
-  playingText: {
-    fontSize: 12,
-    color: "#3b82f6",
-    fontWeight: "500",
-  },
-  playingTextGreen: {
-    fontSize: 12,
-    color: "#10b981",
-    fontWeight: "500",
   },
   translatedTextBlock: {
     borderLeftWidth: 4,
