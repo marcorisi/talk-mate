@@ -6,6 +6,7 @@ import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
 import IsPlayingCardFooter from "./IsPlayingCardFooter"
+import Card from "./Card"
 
 const nationalities: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -28,19 +29,8 @@ export default function TranslationApp() {
   const [transcribedText, setTranscribedText] = useState("")
   const [translatedText, setTranslatedText] = useState("")
   const [showLanguageSelector, setShowLanguageSelector] = useState(null)
-  const [isPlayingOriginal, setIsPlayingOriginal] = useState(false)
+
   const [isPlayingTranslated, setIsPlayingTranslated] = useState(false)
-
-  const playOriginalText = () => {
-    setIsPlayingOriginal(true)
-    // Mock playing - in real app, this would use text-to-speech
-    setTimeout(() => setIsPlayingOriginal(false), 3000) // Auto stop after 3 seconds for demo
-  }
-
-  const stopOriginalText = () => {
-    setIsPlayingOriginal(false)
-    // Mock stopping - in real app, this would stop text-to-speech
-  }
 
   const playTranslatedText = () => {
     setIsPlayingTranslated(true)
@@ -113,27 +103,10 @@ export default function TranslationApp() {
         {!!transcribedText ? (
           <View style={styles.textBlocksContainer}>
             {/* Original Text Block */}
-            <View style={[styles.textBlock, styles.originalTextBlock]}>
-              <View style={styles.textBlockHeader}>
-                <Text style={styles.textLabel}>Original ({currentLanguage.name})</Text>
-                <TouchableOpacity
-                  style={[
-                    styles.speakerButton,
-                    isPlayingOriginal ? styles.speakerButtonActive : styles.speakerButtonInactive,
-                  ]}
-                  onPress={isPlayingOriginal ? stopOriginalText : playOriginalText}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons
-                    name={isPlayingOriginal ? "volume-mute" : "volume-high"}
-                    size={16}
-                    color={isPlayingOriginal ? "#3b82f6" : "#6b7280"}
-                  />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.transcribedText}>{transcribedText}</Text>
-              {isPlayingOriginal && <IsPlayingCardFooter isTranslated={false} />}
-            </View>
+            <Card 
+              currentLanguage={currentLanguage} 
+              transcribedText={transcribedText} 
+            />
 
             {/* Translated Text Block */}
             {!!translatedText && (
