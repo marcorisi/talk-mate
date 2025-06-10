@@ -1,11 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-
-interface Language {
-  code: string;
-  name: string;
-  flag: string;
-}
+import { Language } from "@/src/domain";
 
 interface LanguageSelectorsProps {
   speaker1Language: Language;

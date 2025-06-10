@@ -1,11 +1,12 @@
 import { useState } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import { Language } from "@/src/domain"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
 
-const nationalities = [
+const nationalities: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Spanish", flag: "🇪🇸" },
   { code: "fr", name: "French", flag: "🇫🇷" },

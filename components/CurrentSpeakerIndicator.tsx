@@ -1,10 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-
-interface Language {
-  name: string;
-  flag: string;
-  code: string;
-}
+import { Language } from '@/src/domain';
 
 interface CurrentSpeakerIndicatorProps {
   currentLanguage: Language;
