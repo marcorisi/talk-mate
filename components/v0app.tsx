@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } fr
 import { Ionicons } from "@expo/vector-icons"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
+import LanguageSelectors from "./LanguageSelectors"
 
 const nationalities = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -59,6 +60,10 @@ export default function TranslationApp() {
     setShowLanguageSelector(null)
   }
 
+  const handleLanguagePress = (speaker) => {
+    setShowLanguageSelector(speaker)
+  }
+
   const currentLanguage = currentSpeaker === 1 ? speaker1Language : speaker2Language
   const targetLanguage = currentSpeaker === 1 ? speaker2Language : speaker1Language
 
@@ -66,28 +71,13 @@ export default function TranslationApp() {
     <SafeAreaView style={styles.container}>
       <Header />
 
-      {/* Language Selectors */}
-      <View style={styles.languageSection}>
-        <TouchableOpacity
-          style={[styles.languageButton, currentSpeaker === 1 && styles.activeLanguage]}
-          onPress={() => setShowLanguageSelector(1)}
-        >
-          <Text style={styles.flag}>{speaker1Language.flag}</Text>
-          <Text style={styles.languageName}>{speaker1Language.name}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.swapButton} onPress={toggleSpeaker}>
-          <Ionicons name="swap-horizontal" size={24} color="#666" />
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.languageButton, currentSpeaker === 2 && styles.activeLanguage]}
-          onPress={() => setShowLanguageSelector(2)}
-        >
-          <Text style={styles.flag}>{speaker2Language.flag}</Text>
-          <Text style={styles.languageName}>{speaker2Language.name}</Text>
-        </TouchableOpacity>
-      </View>
+      <LanguageSelectors
+        speaker1Language={speaker1Language}
+        speaker2Language={speaker2Language}
+        currentSpeaker={currentSpeaker}
+        onLanguagePress={(speaker) => handleLanguagePress(speaker)}
+        onToggleSpeaker={toggleSpeaker}
+      />
 
       {/* Current Speaker Indicator */}
       <CurrentSpeakerIndicator currentLanguage={currentLanguage} />
@@ -163,35 +153,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f8f9fa",
   },
-  languageSection: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-  },
-  languageButton: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: "white",
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: "#e9ecef",
-  },
-  activeLanguage: {
-    borderColor: "#007bff",
-    backgroundColor: "#f0f8ff",
-  },
   flag: {
     fontSize: 24,
     marginBottom: 4,
-  },
-  languageName: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#495057",
   },
   swapButton: {
     marginHorizontal: 16,
