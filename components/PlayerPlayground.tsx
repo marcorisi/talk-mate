@@ -4,7 +4,7 @@ import {
 } from "expo-speech-recognition";
 import { useState } from "react";
 import { Button, ScrollView, Text, View, StyleSheet } from "react-native";
-import { translateText } from "@/services/openai";
+import { translateText } from "@/src/openai";
 
 function PlayerPlayground() {
   const [recognizing, setRecognizing] = useState(false);
