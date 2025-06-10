@@ -2,6 +2,7 @@ import { useState } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import Header from "./Header"
+import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 
 const nationalities = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -89,11 +90,7 @@ export default function TranslationApp() {
       </View>
 
       {/* Current Speaker Indicator */}
-      <View style={styles.speakerIndicator}>
-        <Text style={styles.speakerText}>
-          Speaking: {currentLanguage.flag} {currentLanguage.name}
-        </Text>
-      </View>
+      <CurrentSpeakerIndicator currentLanguage={currentLanguage} />
 
       {/* Text Display Area */}
       <ScrollView style={styles.textContainer}>
