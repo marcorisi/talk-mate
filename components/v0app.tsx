@@ -5,7 +5,6 @@ import { Language } from "@/src/domain"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
-import IsPlayingCardFooter from "./IsPlayingCardFooter"
 import Card from "./Card"
 
 const nationalities: Language[] = [
@@ -105,14 +104,14 @@ export default function TranslationApp() {
             {/* Original Text Block */}
             <Card 
               language={currentLanguage} 
-              transcribedText={transcribedText} 
+              text={transcribedText} 
             />
 
             {/* Translated Text Block */}
             {!!translatedText && (
               <Card 
                 language={targetLanguage} 
-                transcribedText={translatedText}
+                text={translatedText}
                 isTranslated={true} 
               />
             )}

@@ -7,11 +7,11 @@ import { Language } from '@/src/domain';
 
 interface CardProps {
     language: Language;
-    transcribedText?: string;
+    text?: string;
     isTranslated?: boolean;
 }
 
-export default function Card({ language, transcribedText, isTranslated = false }: CardProps) {
+export default function Card({ language, text, isTranslated = false }: CardProps) {
 
     const [isPlaying, setIsPlaying] = useState(false)
 
@@ -50,7 +50,7 @@ export default function Card({ language, transcribedText, isTranslated = false }
                 />
             </TouchableOpacity>
             </View>
-            <Text style={isTranslated ? styles.translatedText : styles.transcribedText}>{transcribedText}</Text>
+            <Text style={isTranslated ? styles.translatedText : styles.transcribedText}>{text}</Text>
             {isPlaying && <IsPlayingCardFooter isTranslated={isTranslated} />}
         </View>
     )
