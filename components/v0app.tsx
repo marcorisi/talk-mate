@@ -26,6 +26,30 @@ export default function TranslationApp() {
   const [transcribedText, setTranscribedText] = useState("")
   const [translatedText, setTranslatedText] = useState("")
   const [showLanguageSelector, setShowLanguageSelector] = useState(null)
+  const [isPlayingOriginal, setIsPlayingOriginal] = useState(false)
+  const [isPlayingTranslated, setIsPlayingTranslated] = useState(false)
+
+  const playOriginalText = () => {
+    setIsPlayingOriginal(true)
+    // Mock playing - in real app, this would use text-to-speech
+    setTimeout(() => setIsPlayingOriginal(false), 3000) // Auto stop after 3 seconds for demo
+  }
+
+  const stopOriginalText = () => {
+    setIsPlayingOriginal(false)
+    // Mock stopping - in real app, this would stop text-to-speech
+  }
+
+  const playTranslatedText = () => {
+    setIsPlayingTranslated(true)
+    // Mock playing - in real app, this would use text-to-speech
+    setTimeout(() => setIsPlayingTranslated(false), 3000) // Auto stop after 3 seconds for demo
+  }
+
+  const stopTranslatedText = () => {
+    setIsPlayingTranslated(false)
+    // Mock stopping - in real app, this would stop text-to-speech
+  }
 
   const toggleSpeaker = () => {
     setCurrentSpeaker(currentSpeaker === 1 ? 2 : 1)
@@ -83,23 +107,81 @@ export default function TranslationApp() {
       <CurrentSpeakerIndicator currentLanguage={currentLanguage} />
 
       {/* Text Display Area */}
-      <ScrollView style={styles.textContainer}>
+      <ScrollView style={styles.textContainer} showsVerticalScrollIndicator={false}>
         {!!transcribedText ? (
-          <View style={styles.textBlock}>
-            <Text style={styles.textLabel}>Original ({currentLanguage.name})</Text>
-            <Text style={styles.transcribedText}>{transcribedText}</Text>
+          <View style={styles.textBlocksContainer}>
+            {/* Original Text Block */}
+            <View style={[styles.textBlock, styles.originalTextBlock]}>
+              <View style={styles.textBlockHeader}>
+                <Text style={styles.textLabel}>Original ({currentLanguage.name})</Text>
+                <TouchableOpacity
+                  style={[
+                    styles.speakerButton,
+                    isPlayingOriginal ? styles.speakerButtonActive : styles.speakerButtonInactive,
+                  ]}
+                  onPress={isPlayingOriginal ? stopOriginalText : playOriginalText}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={isPlayingOriginal ? "volume-mute" : "volume-high"}
+                    size={16}
+                    color={isPlayingOriginal ? "#3b82f6" : "#6b7280"}
+                  />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.transcribedText}>{transcribedText}</Text>
+              {isPlayingOriginal && (
+                <View style={styles.playingIndicator}>
+                  <View style={styles.soundWave}>
+                    <View style={[styles.soundBar, styles.soundBar1]} />
+                    <View style={[styles.soundBar, styles.soundBar2]} />
+                    <View style={[styles.soundBar, styles.soundBar3]} />
+                    <View style={[styles.soundBar, styles.soundBar4]} />
+                  </View>
+                  <Text style={styles.playingText}>Playing...</Text>
+                </View>
+              )}
+            </View>
+
+            {/* Translated Text Block */}
+            {!!translatedText && (
+              <View style={[styles.textBlock, styles.translatedTextBlock]}>
+                <View style={styles.textBlockHeader}>
+                  <Text style={styles.textLabel}>Translation ({targetLanguage.name})</Text>
+                  <TouchableOpacity
+                    style={[
+                      styles.speakerButton,
+                      isPlayingTranslated ? styles.speakerButtonActiveGreen : styles.speakerButtonInactive,
+                    ]}
+                    onPress={isPlayingTranslated ? stopTranslatedText : playTranslatedText}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons
+                      name={isPlayingTranslated ? "volume-mute" : "volume-high"}
+                      size={16}
+                      color={isPlayingTranslated ? "#10b981" : "#6b7280"}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <Text style={styles.translatedText}>{translatedText}</Text>
+                {isPlayingTranslated && (
+                  <View style={styles.playingIndicator}>
+                    <View style={styles.soundWave}>
+                      <View style={[styles.soundBar, styles.soundBarGreen1]} />
+                      <View style={[styles.soundBar, styles.soundBarGreen2]} />
+                      <View style={[styles.soundBar, styles.soundBarGreen3]} />
+                      <View style={[styles.soundBar, styles.soundBarGreen4]} />
+                    </View>
+                    <Text style={styles.playingTextGreen}>Playing...</Text>
+                  </View>
+                )}
+              </View>
+            )}
           </View>
         ) : (
           <View style={styles.placeholderContainer}>
             <Ionicons name="mic-outline" size={48} color="#ccc" />
             <Text style={styles.placeholderText}>Tap the microphone to start recording</Text>
-          </View>
-        )}
-
-        {!!translatedText && (
-          <View style={[styles.textBlock, styles.translatedBlock]}>
-            <Text style={styles.textLabel}>Translation ({targetLanguage.name})</Text>
-            <Text style={styles.translatedText}>{translatedText}</Text>
           </View>
         )}
       </ScrollView>
@@ -300,5 +382,92 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
+  },
+  playingIndicator: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  soundWave: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  soundBar: {
+    width: 2,
+    borderRadius: 1,
+    marginHorizontal: 1,
+  },
+  soundBar1: {
+    height: 12,
+    backgroundColor: "#3b82f6",
+  },
+  soundBar2: {
+    height: 16,
+    backgroundColor: "#3b82f6",
+  },
+  soundBar3: {
+    height: 8,
+    backgroundColor: "#3b82f6",
+  },
+  soundBar4: {
+    height: 12,
+    backgroundColor: "#3b82f6",
+  },
+  soundBarGreen1: {
+    height: 12,
+    backgroundColor: "#10b981",
+  },
+  soundBarGreen2: {
+    height: 16,
+    backgroundColor: "#10b981",
+  },
+  soundBarGreen3: {
+    height: 8,
+    backgroundColor: "#10b981",
+  },
+  soundBarGreen4: {
+    height: 12,
+    backgroundColor: "#10b981",
+  },
+  playingText: {
+    fontSize: 12,
+    color: "#3b82f6",
+    fontWeight: "500",
+  },
+  playingTextGreen: {
+    fontSize: 12,
+    color: "#10b981",
+    fontWeight: "500",
+  },
+  translatedTextBlock: {
+    borderLeftWidth: 4,
+    borderLeftColor: "#28a745",
+  },
+  textBlockHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 8,
+  },
+  speakerButton: {
+    padding: 8,
+    borderRadius: 20,
+  },
+  speakerButtonInactive: {
+    backgroundColor: "#f1f3f4",
+  },
+  speakerButtonActive: {
+    backgroundColor: "#dbeafe",
+  },
+  speakerButtonActiveGreen: {
+    backgroundColor: "#dcfce7",
+  },
+  originalTextBlock: {
+    borderLeftWidth: 4,
+    borderLeftColor: "#007bff",
+  },
+  textBlocksContainer: {
+    paddingBottom: 20,
   },
 })
