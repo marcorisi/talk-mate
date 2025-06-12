@@ -1,5 +1,5 @@
-import { View } from "react-native";
-import PlayerPlayground from "@/components/PlayerPlayground";
+// import { View } from "react-native";
+// import PlayerPlayground from "@/components/PlayerPlayground";
 import TranslationApp from "@/components/v0app";
 
 export default function Index() {
