@@ -1,12 +1,16 @@
 const OPENAI_API_KEY = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 const BASE_URL = 'https://api.openai.com/v1';
 
-const translateText = async (textToTranslate: string): Promise<string> => {
+export async function translateText(
+  text: string, 
+  sourceLanguage: string = 'auto', 
+  targetLanguage: string = 'en'
+): Promise<string> {
 
-  const fromLanguage = 'Italian';
-  const toLanguage = 'French';
+  const fromLanguage = sourceLanguage === 'auto' ? 'Italian' : sourceLanguage;
+  const toLanguage = targetLanguage === 'en' ? 'French' : targetLanguage;
 
-  if (!textToTranslate.trim()) {
+  if (!text.trim()) {
     throw new Error("No text provided for translation");
   }
 
@@ -24,7 +28,7 @@ const translateText = async (textToTranslate: string): Promise<string> => {
       body: JSON.stringify({
         model: 'gpt-4.1-nano-2025-04-14',
         instructions: 'You are a professional translation expert. Your task is to accurately and naturally translate text between two languages to facilitate clear communication between two people who do not understand each other’s language. Focus on maintaining the original meaning, tone, and context.',
-        input: `Translate the following text from ${fromLanguage} to ${toLanguage}:\n\n${textToTranslate}`,
+        input: `Translate the following text from ${fromLanguage} to ${toLanguage}:\n\n${text}`,
         max_output_tokens: 10000,
         store: false,
       }),
@@ -47,5 +51,3 @@ const translateText = async (textToTranslate: string): Promise<string> => {
     throw error;
   }
 };
-
-export { translateText };

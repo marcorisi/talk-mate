@@ -2,6 +2,11 @@ import { useState } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { Language, Speaker } from "@/src/domain"
+import {
+  ExpoSpeechRecognitionModule,
+  useSpeechRecognitionEvent,
+} from "expo-speech-recognition"
+import { translateText as translateTextAPI } from "@/src/openai"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
@@ -22,6 +27,20 @@ const languages: Language[] = [
   { code: "zh", name: "Chinese", flag: "🇨🇳" },
 ]
 
+// Language code mapping for speech recognition
+const speechLanguageCodes: Record<string, string> = {
+  it: "it-IT",
+  fr: "fr-FR", 
+  en: "en-US",
+  es: "es-ES",
+  de: "de-DE",
+  pt: "pt-PT",
+  ru: "ru-RU",
+  ja: "ja-JP",
+  ko: "ko-KR",
+  zh: "zh-CN",
+}
+
 export default function TranslationApp() {
   const [speaker1Language, setSpeaker1Language] = useState(languages[0])
   const [speaker2Language, setSpeaker2Language] = useState(languages[1])
@@ -30,6 +49,18 @@ export default function TranslationApp() {
   const [transcribedText, setTranscribedText] = useState("")
   const [translatedText, setTranslatedText] = useState("")
   const [showLanguageSelector, setShowLanguageSelector] = useState<null | Speaker>(null)
+  const [isTranslating, setIsTranslating] = useState(false)
+
+  // Speech recognition event handlers
+  useSpeechRecognitionEvent("start", () => setIsRecording(true))
+  useSpeechRecognitionEvent("end", () => setIsRecording(false))
+  useSpeechRecognitionEvent("result", (event) => {
+    setTranscribedText(event.results[0]?.transcript || "")
+  })
+  useSpeechRecognitionEvent("error", (event) => {
+    console.log("Speech recognition error:", event.error, event.message)
+    setIsRecording(false)
+  })
 
   const toggleSpeaker = () => {
     setCurrentSpeaker(currentSpeaker === 1 ? 2 : 1)
@@ -37,22 +68,53 @@ export default function TranslationApp() {
     setTranslatedText("")
   }
 
-  const startRecording = () => {
-    setIsRecording(true)
-    setTranscribedText("")
-    setTranslatedText("")
-    // Mock recording - in real app, this would start speech recognition
+  const startRecording = async () => {
+    try {
+      const result = await ExpoSpeechRecognitionModule.requestPermissionsAsync()
+      if (!result.granted) {
+        console.warn("Speech recognition permissions not granted", result)
+        return
+      }
+
+      const currentLanguage = currentSpeaker === 1 ? speaker1Language : speaker2Language
+      const langCode = speechLanguageCodes[currentLanguage.code] || "en-US"
+
+      setTranscribedText("")
+      setTranslatedText("")
+
+      ExpoSpeechRecognitionModule.start({
+        lang: langCode,
+        interimResults: true,
+        continuous: false,
+      })
+    } catch (error) {
+      console.error("Error starting speech recognition:", error)
+    }
   }
 
   const stopRecording = () => {
-    setIsRecording(false)
-    // Mock transcription result
-    setTranscribedText("This is a sample transcribed text that would appear after recording...")
+    ExpoSpeechRecognitionModule.stop()
   }
 
-  const translateText = () => {
-    // Mock translation
-    setTranslatedText("Este es un texto transcrito de muestra que aparecería después de grabar...")
+  const translateText = async () => {
+    if (!transcribedText.trim()) return
+
+    setIsTranslating(true)
+    try {
+      const currentLanguage = currentSpeaker === 1 ? speaker1Language : speaker2Language
+      const targetLanguage = currentSpeaker === 1 ? speaker2Language : speaker1Language
+      
+      const translated = await translateTextAPI(
+        transcribedText,
+        currentLanguage.code,
+        targetLanguage.code
+      )
+      setTranslatedText(translated)
+    } catch (error) {
+      console.error("Translation error:", error)
+    } finally {
+      setIsTranslating(false)
+    }
   }
 
   const selectLanguage = (language: Language, speaker: Speaker) => {
@@ -118,6 +180,7 @@ export default function TranslationApp() {
         isRecording={isRecording}
         transcribedText={transcribedText}
         translatedText={translatedText}
+        isTranslating={isTranslating}
         onStartRecording={startRecording}
         onStopRecording={stopRecording}
         onTranslateText={translateText}

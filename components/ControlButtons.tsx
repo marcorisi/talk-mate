@@ -1,11 +1,12 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 
 interface ControlButtonsProps {
   isRecording: boolean
   transcribedText: string
   translatedText: string
+  isTranslating?: boolean
   onStartRecording: () => void
   onStopRecording: () => void
   onTranslateText: () => void
@@ -15,6 +16,7 @@ export default function ControlButtons({
   isRecording,
   transcribedText,
   translatedText,
+  isTranslating = false,
   onStartRecording,
   onStopRecording,
   onTranslateText,
@@ -24,14 +26,25 @@ export default function ControlButtons({
       <TouchableOpacity
         style={[styles.recordButton, isRecording && styles.recordingButton]}
         onPress={isRecording ? onStopRecording : onStartRecording}
+        disabled={isTranslating}
       >
         <Ionicons name={isRecording ? "stop" : "mic"} size={32} color="white" />
       </TouchableOpacity>
 
       {!!transcribedText && !translatedText && (
-        <TouchableOpacity style={styles.translateButton} onPress={onTranslateText}>
-          <Ionicons name="language" size={24} color="white" />
-          <Text style={styles.translateButtonText}>Translate</Text>
+        <TouchableOpacity 
+          style={[styles.translateButton, isTranslating && styles.translateButtonDisabled]} 
+          onPress={onTranslateText}
+          disabled={isTranslating}
+        >
+          {isTranslating ? (
+            <ActivityIndicator size="small" color="white" />
+          ) : (
+            <Ionicons name="language" size={24} color="white" />
+          )}
+          <Text style={styles.translateButtonText}>
+            {isTranslating ? "Translating..." : "Translate"}
+          </Text>
         </TouchableOpacity>
       )}
     </View>
@@ -63,6 +76,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 24,
+  },
+  translateButtonDisabled: {
+    backgroundColor: "#6c757d",
   },
   translateButtonText: {
     color: "white",
