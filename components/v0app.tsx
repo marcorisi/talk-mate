@@ -7,6 +7,7 @@ import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
 import Card from "./Card"
 import LanguageSelectorModal from "./LanguageSelectorModal"
+import ControlButtons from "./ControlButtons"
 
 const languages: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
@@ -113,21 +114,14 @@ export default function TranslationApp() {
       </ScrollView>
 
       {/* Control Buttons */}
-      <View style={styles.controlsContainer}>
-        <TouchableOpacity
-          style={[styles.recordButton, isRecording && styles.recordingButton]}
-          onPress={isRecording ? stopRecording : startRecording}
-        >
-          <Ionicons name={isRecording ? "stop" : "mic"} size={32} color="white" />
-        </TouchableOpacity>
-
-        {!!transcribedText && !translatedText && (
-          <TouchableOpacity style={styles.translateButton} onPress={translateText}>
-            <Ionicons name="language" size={24} color="white" />
-            <Text style={styles.translateButtonText}>Translate</Text>
-          </TouchableOpacity>
-        )}
-      </View>
+      <ControlButtons
+        isRecording={isRecording}
+        transcribedText={transcribedText}
+        translatedText={translatedText}
+        onStartRecording={startRecording}
+        onStopRecording={stopRecording}
+        onTranslateText={translateText}
+      />
 
       {/* Language Selector Modal */}
       <LanguageSelectorModal
@@ -170,37 +164,6 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderLeftWidth: 4,
     borderLeftColor: "#007bff",
-  },
-  controlsContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    alignItems: "center",
-  },
-  recordButton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#dc3545",
-    alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 16,
-  },
-  recordingButton: {
-    backgroundColor: "#ff6b6b",
-  },
-  translateButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#28a745",
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 24,
-  },
-  translateButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-    marginLeft: 8,
   },
   textBlocksContainer: {
     paddingBottom: 20,
