@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { Language } from "@/src/domain"
+import { Language, Speaker } from "@/src/domain"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
@@ -25,11 +25,11 @@ const languages: Language[] = [
 export default function TranslationApp() {
   const [speaker1Language, setSpeaker1Language] = useState(languages[0])
   const [speaker2Language, setSpeaker2Language] = useState(languages[1])
-  const [currentSpeaker, setCurrentSpeaker] = useState(1)
+  const [currentSpeaker, setCurrentSpeaker] = useState<Speaker>(1)
   const [isRecording, setIsRecording] = useState(false)
   const [transcribedText, setTranscribedText] = useState("")
   const [translatedText, setTranslatedText] = useState("")
-  const [showLanguageSelector, setShowLanguageSelector] = useState(null)
+  const [showLanguageSelector, setShowLanguageSelector] = useState<null | Speaker>(null)
 
   const toggleSpeaker = () => {
     setCurrentSpeaker(currentSpeaker === 1 ? 2 : 1)
@@ -55,7 +55,7 @@ export default function TranslationApp() {
     setTranslatedText("Este es un texto transcrito de muestra que aparecería después de grabar...")
   }
 
-  const selectLanguage = (language: Language, speaker: number) => {
+  const selectLanguage = (language: Language, speaker: Speaker) => {
     if (speaker === 1) {
       setSpeaker1Language(language)
     } else {
@@ -64,7 +64,7 @@ export default function TranslationApp() {
     setShowLanguageSelector(null)
   }
 
-  const handleLanguagePress = (speaker) => {
+  const handleLanguagePress = (speaker: Speaker) => {
     setShowLanguageSelector(speaker)
   }
 

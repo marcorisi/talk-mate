@@ -1,12 +1,12 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
-import { Language } from '@/src/domain'
+import { Language, Speaker } from '@/src/domain'
 
 interface LanguageSelectorModalProps {
   visible: boolean
-  speakerNumber: number | null
+  speakerNumber: Speaker | null
   languages: Language[]
-  onSelectLanguage: (language: Language, speaker: number) => void
+  onSelectLanguage: (language: Language, speaker: Speaker) => void
   onClose: () => void
 }
 

@@ -4,4 +4,6 @@ interface Language {
   code: string;
 }
 
-export { Language };
+type Speaker = 1 | 2;
+
+export { Language, Speaker };

@@ -1,12 +1,12 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { Language } from "@/src/domain";
+import { Language, Speaker } from "@/src/domain";
 
 interface LanguageSelectorsProps {
   speaker1Language: Language;
   speaker2Language: Language;
-  currentSpeaker: number;
-  onLanguagePress: (speaker: number) => void;
+  currentSpeaker: Speaker;
+  onLanguagePress: (speaker: Speaker) => void;
   onToggleSpeaker: () => void;
 }
 
