@@ -10,11 +10,11 @@ import LanguageSelectorModal from "./LanguageSelectorModal"
 import ControlButtons from "./ControlButtons"
 
 const languages: Language[] = [
+  { code: "it", name: "Italian", flag: "🇮🇹" },
+  { code: "fr", name: "French", flag: "🇫🇷" },
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Spanish", flag: "🇪🇸" },
-  { code: "fr", name: "French", flag: "🇫🇷" },
   { code: "de", name: "German", flag: "🇩🇪" },
-  { code: "it", name: "Italian", flag: "🇮🇹" },
   { code: "pt", name: "Portuguese", flag: "🇵🇹" },
   { code: "ru", name: "Russian", flag: "🇷🇺" },
   { code: "ja", name: "Japanese", flag: "🇯🇵" },
