@@ -6,8 +6,9 @@ import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
 import Card from "./Card"
+import LanguageSelectorModal from "./LanguageSelectorModal"
 
-const nationalities: Language[] = [
+const languages: Language[] = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Spanish", flag: "🇪🇸" },
   { code: "fr", name: "French", flag: "🇫🇷" },
@@ -21,8 +22,8 @@ const nationalities: Language[] = [
 ]
 
 export default function TranslationApp() {
-  const [speaker1Language, setSpeaker1Language] = useState(nationalities[0])
-  const [speaker2Language, setSpeaker2Language] = useState(nationalities[1])
+  const [speaker1Language, setSpeaker1Language] = useState(languages[0])
+  const [speaker2Language, setSpeaker2Language] = useState(languages[1])
   const [currentSpeaker, setCurrentSpeaker] = useState(1)
   const [isRecording, setIsRecording] = useState(false)
   const [transcribedText, setTranscribedText] = useState("")
@@ -53,7 +54,7 @@ export default function TranslationApp() {
     setTranslatedText("Este es un texto transcrito de muestra que aparecería después de grabar...")
   }
 
-  const selectLanguage = (language, speaker) => {
+  const selectLanguage = (language: Language, speaker: number) => {
     if (speaker === 1) {
       setSpeaker1Language(language)
     } else {
@@ -129,28 +130,13 @@ export default function TranslationApp() {
       </View>
 
       {/* Language Selector Modal */}
-      {showLanguageSelector && (
-        <View style={styles.modalOverlay}>
-          <View style={styles.languageSelectorModal}>
-            <Text style={styles.modalTitle}>Select Language for Speaker {showLanguageSelector}</Text>
-            <ScrollView style={styles.languageList}>
-              {nationalities.map((language) => (
-                <TouchableOpacity
-                  key={language.code}
-                  style={styles.languageOption}
-                  onPress={() => selectLanguage(language, showLanguageSelector)}
-                >
-                  <Text style={styles.flag}>{language.flag}</Text>
-                  <Text style={styles.languageOptionText}>{language.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity style={styles.closeButton} onPress={() => setShowLanguageSelector(null)}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+      <LanguageSelectorModal
+        visible={!!showLanguageSelector}
+        speakerNumber={showLanguageSelector}
+        languages={languages}
+        onSelectLanguage={selectLanguage}
+        onClose={() => setShowLanguageSelector(null)}
+      />
     </SafeAreaView>
   )
 }
@@ -159,10 +145,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f9fa",
-  },
-  flag: {
-    fontSize: 24,
-    marginBottom: 4,
   },
   textContainer: {
     flex: 1,
@@ -219,58 +201,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
-  },
-  modalOverlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  languageSelectorModal: {
-    backgroundColor: "white",
-    borderRadius: 16,
-    padding: 20,
-    width: "90%",
-    maxHeight: "70%",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#343a40",
-  },
-  languageList: {
-    maxHeight: 300,
-  },
-  languageOption: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#f1f3f4",
-  },
-  languageOptionText: {
-    fontSize: 16,
-    marginLeft: 12,
-    color: "#343a40",
-  },
-  closeButton: {
-    backgroundColor: "#6c757d",
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginTop: 16,
-  },
-  closeButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "600",
-    textAlign: "center",
   },
   textBlocksContainer: {
     paddingBottom: 20,
