@@ -1,7 +1,7 @@
 interface Language {
+  code: string;
   name: string;
   flag: string;
-  code: string;
 }
 
 type Speaker = 1 | 2;

@@ -15,31 +15,17 @@ import LanguageSelectorModal from "./LanguageSelectorModal"
 import ControlButtons from "./ControlButtons"
 
 const languages: Language[] = [
-  { code: "it", name: "Italian", flag: "🇮🇹" },
-  { code: "fr", name: "French", flag: "🇫🇷" },
-  { code: "en", name: "English", flag: "🇺🇸" },
-  { code: "es", name: "Spanish", flag: "🇪🇸" },
-  { code: "de", name: "German", flag: "🇩🇪" },
-  { code: "pt", name: "Portuguese", flag: "🇵🇹" },
-  { code: "ru", name: "Russian", flag: "🇷🇺" },
-  { code: "ja", name: "Japanese", flag: "🇯🇵" },
-  { code: "ko", name: "Korean", flag: "🇰🇷" },
-  { code: "zh", name: "Chinese", flag: "🇨🇳" },
+  { code: "it-IT", name: "Italian", flag: "🇮🇹" },
+  { code: "fr-FR", name: "French", flag: "🇫🇷" },
+  { code: "en-US", name: "English", flag: "🇺🇸" },
+  { code: "es-ES", name: "Spanish", flag: "🇪🇸" },
+  { code: "de-DE", name: "German", flag: "🇩🇪" },
+  { code: "pt-PT", name: "Portuguese", flag: "🇵🇹" },
+  { code: "ru-RU", name: "Russian", flag: "🇷🇺" },
+  { code: "ja-JP", name: "Japanese", flag: "🇯🇵" },
+  { code: "ko-KR", name: "Korean", flag: "🇰🇷" },
+  { code: "zh-CN", name: "Chinese", flag: "🇨🇳" },
 ]
-
-// Language code mapping for speech recognition
-const speechLanguageCodes: Record<string, string> = {
-  it: "it-IT",
-  fr: "fr-FR", 
-  en: "en-US",
-  es: "es-ES",
-  de: "de-DE",
-  pt: "pt-PT",
-  ru: "ru-RU",
-  ja: "ja-JP",
-  ko: "ko-KR",
-  zh: "zh-CN",
-}
 
 export default function TranslationApp() {
   const [speaker1Language, setSpeaker1Language] = useState(languages[0])
@@ -77,7 +63,7 @@ export default function TranslationApp() {
       }
 
       const currentLanguage = currentSpeaker === 1 ? speaker1Language : speaker2Language
-      const langCode = speechLanguageCodes[currentLanguage.code] || "en-US"
+      const langCode = currentLanguage.code
 
       setTranscribedText("")
       setTranslatedText("")
@@ -106,8 +92,8 @@ export default function TranslationApp() {
       
       const translated = await translateTextAPI(
         transcribedText,
-        currentLanguage.code,
-        targetLanguage.code
+        currentLanguage.name,
+        targetLanguage.name
       )
       setTranslatedText(translated)
     } catch (error) {

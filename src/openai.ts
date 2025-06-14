@@ -3,12 +3,9 @@ const BASE_URL = 'https://api.openai.com/v1';
 
 export async function translateText(
   text: string, 
-  sourceLanguage: string = 'auto', 
-  targetLanguage: string = 'en'
+  fromLanguage: string, 
+  toLanguage: string
 ): Promise<string> {
-
-  const fromLanguage = sourceLanguage === 'auto' ? 'Italian' : sourceLanguage;
-  const toLanguage = targetLanguage === 'en' ? 'French' : targetLanguage;
 
   if (!text.trim()) {
     throw new Error("No text provided for translation");
