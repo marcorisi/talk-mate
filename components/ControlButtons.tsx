@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
   },
   translateButtonDisabled: {
-    backgroundColor: "#6c757d",
+    backgroundColor: colors.background.secondary,
   },
   translateButtonText: {
     color: colors.button.primary,

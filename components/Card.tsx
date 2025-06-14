@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   textLabel: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#6c757d",
+    color: colors.text.secondary,
     marginBottom: 8,
     textTransform: "uppercase",
   },

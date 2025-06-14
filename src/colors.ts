@@ -2,6 +2,7 @@ export const colors = {
   // Background colors
   background: {
     primary: "#f8f9fa",
+    secondary: "#6c757d",
     card: "white",
     container: "white",
   },
