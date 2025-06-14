@@ -39,7 +39,7 @@ function PlayerPlayground() {
   const handleTranslate = () => {
     setIsTranslating(true);
     try {
-      translateText(transcript)
+      translateText(transcript, "italian", "french")
         .then((translatedText) => {
           setTranslation(translatedText);
         })
