@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     borderColor: "#e9ecef",
   },
   activeLanguage: {
-    borderColor: "#007bff",
+    borderColor: colors.accent.primary,
     backgroundColor: "#f0f8ff",
   },
   flag: {
