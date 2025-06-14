@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   translateButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#28a745",
+    backgroundColor: colors.accent.secondary,
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 24,

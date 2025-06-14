@@ -16,11 +16,7 @@ export const colors = {
   // Accent colors
   accent: {
     primary: "#007bff",
-  },
-  
-  // Border colors
-  border: {
-    primary: "#007bff",
+    secondary: "#28a745",
   },
 
   icon: {

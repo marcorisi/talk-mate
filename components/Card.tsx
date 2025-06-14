@@ -64,15 +64,15 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     borderLeftWidth: 4,
-    borderLeftColor: "#007bff",
+    borderLeftColor: colors.accent.primary,
   },
   originalTextBlock: {
     borderLeftWidth: 4,
-    borderLeftColor: "#007bff",
+    borderLeftColor: colors.accent.primary,
   },
   translatedTextBlock: {
     borderLeftWidth: 4,
-    borderLeftColor: "#28a745",
+    borderLeftColor: colors.accent.secondary,
   },
   textBlockHeader: {
     flexDirection: "row",

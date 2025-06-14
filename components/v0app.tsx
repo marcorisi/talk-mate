@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
     borderLeftWidth: 4,
-    borderLeftColor: colors.border.primary,
+    borderLeftColor: colors.accent.primary,
   },
   textBlocksContainer: {
     paddingBottom: 20,
