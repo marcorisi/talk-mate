@@ -7,6 +7,7 @@ import {
   useSpeechRecognitionEvent,
 } from "expo-speech-recognition"
 import { translateText as translateTextAPI } from "@/src/openai"
+import { colors } from "@/src/colors"
 import Header from "./Header"
 import CurrentSpeakerIndicator from "./CurrentSpeakerIndicator"
 import LanguageSelectors from "./LanguageSelectors"
@@ -155,7 +156,7 @@ export default function TranslationApp() {
           </View>
         ) : (
           <View style={styles.placeholderContainer}>
-            <Ionicons name="mic-outline" size={48} color="#ccc" />
+            <Ionicons name="mic-outline" size={48} color={colors.text.placeholder} />
             <Text style={styles.placeholderText}>Tap the microphone to start recording</Text>
           </View>
         )}
@@ -187,7 +188,7 @@ export default function TranslationApp() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: colors.background.primary,
   },
   textContainer: {
     flex: 1,
@@ -202,17 +203,17 @@ const styles = StyleSheet.create({
   },
   placeholderText: {
     fontSize: 16,
-    color: "#6c757d",
+    color: colors.text.secondary,
     textAlign: "center",
     marginTop: 16,
   },
   textBlock: {
-    backgroundColor: "white",
+    backgroundColor: colors.background.card,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
     borderLeftWidth: 4,
-    borderLeftColor: "#007bff",
+    borderLeftColor: colors.border.primary,
   },
   textBlocksContainer: {
     paddingBottom: 20,

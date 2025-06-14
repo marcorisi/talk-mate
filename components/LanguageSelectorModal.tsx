@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { Language, Speaker } from '@/src/domain'
+import { colors } from '@/src/colors'
 
 interface LanguageSelectorModalProps {
   visible: boolean
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   languageSelectorModal: {
-    backgroundColor: 'white',
+    backgroundColor: colors.background.container,
     borderRadius: 16,
     padding: 20,
     width: '90%',
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   closeButtonText: {
-    color: 'white',
+    color: colors.button.primary,
     fontSize: 16,
     fontWeight: '600',
     textAlign: 'center',

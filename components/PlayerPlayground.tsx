@@ -5,6 +5,7 @@ import {
 import { useState } from "react";
 import { Button, ScrollView, Text, View, StyleSheet } from "react-native";
 import { translateText } from "@/src/openai";
+import { colors } from "@/src/colors";
 
 function PlayerPlayground() {
   const [recognizing, setRecognizing] = useState(false);
@@ -115,7 +116,7 @@ const styles = StyleSheet.create({
     width: '80%',
     marginTop: 15,
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: colors.background.container,
     borderRadius: 8,
   },
   translationContainer: {
@@ -123,7 +124,7 @@ const styles = StyleSheet.create({
     width: '80%',
     marginTop: 15,
     padding: 10,
-    backgroundColor: "white",
+    backgroundColor: colors.background.container,
     borderRadius: 8,
   },
   transcriptText: {

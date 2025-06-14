@@ -4,6 +4,7 @@ import { useState } from 'react';
 import IsPlayingCardFooter from './IsPlayingCardFooter';
 
 import { Language } from '@/src/domain';
+import { colors } from '@/src/colors';
 
 interface CardProps {
     language: Language;
@@ -58,7 +59,7 @@ export default function Card({ language, text, isTranslated = false }: CardProps
 
 const styles = StyleSheet.create({
   textBlock: {
-    backgroundColor: "white",
+    backgroundColor: colors.background.container,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,

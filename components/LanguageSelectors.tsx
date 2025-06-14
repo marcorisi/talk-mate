@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { Language, Speaker } from "@/src/domain";
+import { colors } from "@/src/colors";
 
 interface LanguageSelectorsProps {
   speaker1Language: Language;
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     paddingHorizontal: 16,
-    backgroundColor: "white",
+    backgroundColor: colors.background.card,
     borderRadius: 12,
     borderWidth: 2,
     borderColor: "#e9ecef",

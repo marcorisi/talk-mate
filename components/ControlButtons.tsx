@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import { colors } from '@/src/colors'
 
 interface ControlButtonsProps {
   isRecording: boolean
@@ -28,7 +29,7 @@ export default function ControlButtons({
         onPress={isRecording ? onStopRecording : onStartRecording}
         disabled={isTranslating}
       >
-        <Ionicons name={isRecording ? "stop" : "mic"} size={32} color="white" />
+        <Ionicons name={isRecording ? "stop" : "mic"} size={32} color={colors.icon.primary} />
       </TouchableOpacity>
 
       {!!transcribedText && !translatedText && (
@@ -38,9 +39,9 @@ export default function ControlButtons({
           disabled={isTranslating}
         >
           {isTranslating ? (
-            <ActivityIndicator size="small" color="white" />
+            <ActivityIndicator size="small" color={colors.icon.primary} />
           ) : (
-            <Ionicons name="language" size={24} color="white" />
+            <Ionicons name="language" size={24} color={colors.icon.primary} />
           )}
           <Text style={styles.translateButtonText}>
             {isTranslating ? "Translating..." : "Translate"}
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#6c757d",
   },
   translateButtonText: {
-    color: "white",
+    color: colors.button.primary,
     fontSize: 16,
     fontWeight: "600",
     marginLeft: 8,
