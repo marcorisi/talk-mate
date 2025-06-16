@@ -7,6 +7,7 @@
 // import { View } from "react-native";
 // import PlayerPlayground from "@/components/PlayerPlayground";
 import TranslationApp from "@/components/v0app";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
   return (
@@ -19,6 +20,11 @@ export default function Index() {
     // >
     //   <PlayerPlayground />
     // </View>
-    <TranslationApp />
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }}>
+        <TranslationApp />
+      </SafeAreaView>
+    </SafeAreaProvider>
+    
   );
 }
