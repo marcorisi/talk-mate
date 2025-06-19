@@ -6,12 +6,15 @@ import { useState } from "react";
 import { Button, ScrollView, Text, View, StyleSheet } from "react-native";
 import { translateText } from "@/src/openai";
 import { colors } from "@/src/colors";
+import { useAudioPlayer } from "expo-audio";
 
 function PlayerPlayground() {
   const [recognizing, setRecognizing] = useState(false);
   const [transcript, setTranscript] = useState("");
-  const [translation, setTranslation] = useState("");
+  const [translation, setTranslation] = useState("À quelle heure est le check-in ?");
   const [isTranslating, setIsTranslating] = useState(false);
+  const [audioUri, setAudioUri] = useState<string | null>(null);
+  const player = useAudioPlayer(audioUri);
 
   useSpeechRecognitionEvent("start", () => setRecognizing(true));
   useSpeechRecognitionEvent("end", () => setRecognizing(false));
@@ -34,6 +37,38 @@ function PlayerPlayground() {
       interimResults: true,
       continuous: false,
     });
+  };
+
+  const handleVoice = async () => {
+    try {
+      const response = await fetch('https://api.openai.com/v1/audio/speech', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: "gpt-4o-mini-tts",
+          input: translation, // Use the translation text instead of hardcoded text
+          voice: "nova",
+          response_format: "mp3"
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const audioArrayBuffer = await response.arrayBuffer();
+      const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioArrayBuffer)));
+      const uri = `data:audio/mp3;base64,${audioBase64}`;
+      
+      setAudioUri(uri);
+      player.play();
+      
+    } catch (error) {
+      console.error("Error fetching or playing audio:", error);
+    }
   };
 
   const handleTranslate = () => {
@@ -75,6 +110,7 @@ function PlayerPlayground() {
         <Text style={styles.areaTitle}>Translation</Text>
 
         <Button title="Translate" onPress={handleTranslate} />
+        <Button title="Voice" onPress={handleVoice} />
 
         <ScrollView style={styles.translationContainer}>
           <Text style={styles.translationText}>{translation}</Text>
