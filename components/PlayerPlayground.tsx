@@ -13,6 +13,7 @@ function PlayerPlayground() {
   const [transcript, setTranscript] = useState("");
   const [translation, setTranslation] = useState("À quelle heure est le check-in ?");
   const [isTranslating, setIsTranslating] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [audioUri, setAudioUri] = useState<string | null>(null);
   const player = useAudioPlayer(audioUri);
 
@@ -40,6 +41,7 @@ function PlayerPlayground() {
   };
 
   const handleVoice = async () => {
+    setIsDownloading(true);
     try {
       const response = await fetch('https://api.openai.com/v1/audio/speech', {
         method: 'POST',
@@ -55,7 +57,10 @@ function PlayerPlayground() {
         })
       });
 
+      
+
       if (!response.ok) {
+        setIsDownloading(false);
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
@@ -64,6 +69,7 @@ function PlayerPlayground() {
       const uri = `data:audio/mp3;base64,${audioBase64}`;
       
       setAudioUri(uri);
+      setIsDownloading(false);
       player.play();
       
     } catch (error) {
@@ -110,7 +116,7 @@ function PlayerPlayground() {
         <Text style={styles.areaTitle}>Translation</Text>
 
         <Button title="Translate" onPress={handleTranslate} />
-        <Button title="Voice" onPress={handleVoice} />
+        <Button title={isDownloading ? "Downloading..." : "Voice"} onPress={handleVoice} />
 
         <ScrollView style={styles.translationContainer}>
           <Text style={styles.translationText}>{translation}</Text>
