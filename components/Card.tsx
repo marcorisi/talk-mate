@@ -1,7 +1,9 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useAudioPlayer } from 'expo-audio';
 import IsPlayingCardFooter from './IsPlayingCardFooter';
+import { textToSpeech } from '@/src/openai';
 
 import { Language } from '@/src/domain';
 import { colors } from '@/src/colors';
@@ -13,48 +15,103 @@ interface CardProps {
 }
 
 export default function Card({ language, text, isTranslated = false }: CardProps) {
-
-    const [isPlaying, setIsPlaying] = useState(false)
+    const [isPlaying, setIsPlaying] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [audioUri, setAudioUri] = useState<string | null>(null);
+    const player = useAudioPlayer(audioUri);
 
     const textLabel = isTranslated ? "Translation" : "Original";
 
-    const stop = () => {
-        setIsPlaying(false)
-        // Mock stopping - in real app, this would stop text-to-speech
-    }
+    const stop = async () => {
+        try {
+            await player.pause();
+            setIsPlaying(false);
+        } catch (error) {
+            console.error("Error stopping audio:", error);
+            setIsPlaying(false);
+        }
+    };
 
-    const play = () => {
-        setIsPlaying(true)
-        setTimeout(() => setIsPlaying(false), 1500)
-        // Mock playing - in real app, this would use text-to-speech
-    }
+    const play = async () => {
+        if (!text?.trim()) {
+            Alert.alert("Error", "No text to play");
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const voice = "nova"
+            const uri = await textToSpeech(text, voice);
+            setAudioUri(uri);
+            setIsLoading(false);
+            setIsPlaying(true);
+            
+            player.play();
+            
+            // Listen for when audio finishes playing
+            // Note: You might need to add event listeners to detect when audio ends
+            // For now, we'll use a simple timeout based on estimated reading time
+            const estimatedDuration = Math.max(text.length * 100, 2000); // Rough estimate
+            setTimeout(() => {
+                setIsPlaying(false);
+            }, estimatedDuration);
+            
+        } catch (error) {
+            console.error("Error playing audio:", error);
+            Alert.alert("Error", "Failed to play audio");
+            setIsLoading(false);
+            setIsPlaying(false);
+        }
+    };
+
+    const handlePress = () => {
+        if (isPlaying) {
+            stop();
+        } else if (!isLoading) {
+            play();
+        }
+    };
+
+    const getButtonIcon = () => {
+        if (isLoading) return "hourglass";
+        if (isPlaying) return "volume-mute";
+        return "volume-high";
+    };
+
+    const getButtonColor = () => {
+        if (isLoading) return "#f59e0b";
+        if (isPlaying) return isTranslated ? "#10b981" : "#3b82f6";
+        return "#6b7280";
+    };
 
     return (
-        
         <View style={[styles.textBlock, isTranslated ? styles.translatedTextBlock : styles.originalTextBlock]}>
             <View style={styles.textBlockHeader}>
-            <Text style={styles.textLabel}>{textLabel} ({language.name})</Text>
-            <TouchableOpacity
-                style={[
-                styles.speakerButton,
-                isPlaying 
-                    ? (isTranslated ? styles.speakerButtonActiveGreen : styles.speakerButtonActive)
-                    : styles.speakerButtonInactive,
-                ]}
-                onPress={isPlaying ? stop : play}
-                activeOpacity={0.7}
-            >
-                <Ionicons
-                    name={isPlaying ? "volume-mute" : "volume-high"}
-                    size={16}
-                    color={isPlaying ? isTranslated ? "#10b981" : "#3b82f6" : "#6b7280"}
-                />
-            </TouchableOpacity>
+                <Text style={styles.textLabel}>{textLabel} ({language.name})</Text>
+                <TouchableOpacity
+                    style={[
+                        styles.speakerButton,
+                        isLoading 
+                            ? styles.speakerButtonLoading
+                            : isPlaying 
+                                ? (isTranslated ? styles.speakerButtonActiveGreen : styles.speakerButtonActive)
+                                : styles.speakerButtonInactive,
+                    ]}
+                    onPress={handlePress}
+                    activeOpacity={0.7}
+                    disabled={!text?.trim()}
+                >
+                    <Ionicons
+                        name={getButtonIcon()}
+                        size={16}
+                        color={getButtonColor()}
+                    />
+                </TouchableOpacity>
             </View>
             <Text style={isTranslated ? styles.translatedText : styles.transcribedText}>{text}</Text>
-            {isPlaying && <IsPlayingCardFooter isTranslated={isTranslated} />}
+            {(isPlaying || isLoading) && <IsPlayingCardFooter isTranslated={isTranslated} />}
         </View>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -100,14 +157,17 @@ const styles = StyleSheet.create({
   speakerButtonActiveGreen: {
     backgroundColor: "#dcfce7",
   },
+  speakerButtonLoading: {
+    backgroundColor: "#fef3c7",
+  },
   transcribedText: {
     fontSize: 16,
     lineHeight: 24,
     color: "#343a40",
   },
-translatedText: {
+  translatedText: {
     fontSize: 16,
     lineHeight: 24,
     color: "#343a40",
   },
-})
+});
