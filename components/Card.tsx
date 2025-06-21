@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useState, useEffect } from 'react';
-import { useAudioPlayer } from 'expo-audio';
+import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import IsPlayingCardFooter from './IsPlayingCardFooter';
 import { textToSpeech } from '@/src/openai';
 
@@ -20,6 +20,7 @@ export default function Card({ language, text, isTranslated = false }: CardProps
     const [audioUri, setAudioUri] = useState<string | null>(null);
     const [shouldPlayAfterLoad, setShouldPlayAfterLoad] = useState(false);
     const player = useAudioPlayer(audioUri);
+    const playerStatus = useAudioPlayerStatus(player);
 
     const textLabel = isTranslated ? "Translation" : "Original";
 
@@ -33,12 +34,6 @@ export default function Card({ language, text, isTranslated = false }: CardProps
                     player.play();
                     setIsPlaying(true);
                     setShouldPlayAfterLoad(false);
-                    
-                    // Estimate duration and auto-stop
-                    const estimatedDuration = Math.max(text?.length ? text.length * 100 : 2000, 2000);
-                    setTimeout(() => {
-                        setIsPlaying(false);
-                    }, estimatedDuration);
                 } catch (error) {
                     console.error("Error playing audio:", error);
                     setIsPlaying(false);
@@ -49,6 +44,16 @@ export default function Card({ language, text, isTranslated = false }: CardProps
             playAudio();
         }
     }, [audioUri, shouldPlayAfterLoad]);
+
+    useEffect(() => {
+        if (playerStatus.playing) {
+            setIsPlaying(true);
+            console.log("Audio is playing");
+        } else {
+            setIsPlaying(false);
+            console.log("Audio is paused or stopped");
+        }
+    }, [playerStatus.playing]);
 
     const stop = async () => {
         try {
@@ -129,7 +134,7 @@ export default function Card({ language, text, isTranslated = false }: CardProps
                 </TouchableOpacity>
             </View>
             <Text style={isTranslated ? styles.translatedText : styles.transcribedText}>{text}</Text>
-            {(isPlaying || isLoading) && <IsPlayingCardFooter isTranslated={isTranslated} />}
+            {isPlaying && <IsPlayingCardFooter isTranslated={isTranslated} />}
         </View>
     );
 }
