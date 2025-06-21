@@ -48,3 +48,42 @@ export async function translateText(
     throw error;
   }
 };
+
+export async function textToSpeech(text: string, voice: string = "nova"): Promise<string> {
+  if (!text.trim()) {
+    throw new Error("No text provided for text-to-speech");
+  }
+
+  if (!OPENAI_API_KEY) {
+    throw new Error("OpenAI API key not found.");
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/audio/speech`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${OPENAI_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini-tts",
+        input: text,
+        voice: voice,
+        response_format: "mp3"
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`OpenAI TTS API error: ${response.status} ${response.statusText}`);
+    }
+
+    const audioArrayBuffer = await response.arrayBuffer();
+    const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioArrayBuffer)));
+    const uri = `data:audio/mp3;base64,${audioBase64}`;
+    
+    return uri;
+  } catch (error) {
+    console.error("Text-to-speech error:", error);
+    throw error;
+  }
+}

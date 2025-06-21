@@ -4,7 +4,7 @@ import {
 } from "expo-speech-recognition";
 import { useState } from "react";
 import { Button, ScrollView, Text, View, StyleSheet } from "react-native";
-import { translateText } from "@/src/openai";
+import { translateText, textToSpeech } from "@/src/openai";
 import { colors } from "@/src/colors";
 import { useAudioPlayer } from "expo-audio";
 
@@ -43,37 +43,13 @@ function PlayerPlayground() {
   const handleVoice = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch('https://api.openai.com/v1/audio/speech', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${process.env.EXPO_PUBLIC_OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini-tts",
-          input: translation, // Use the translation text instead of hardcoded text
-          voice: "nova",
-          response_format: "mp3"
-        })
-      });
-
-      
-
-      if (!response.ok) {
-        setIsDownloading(false);
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const audioArrayBuffer = await response.arrayBuffer();
-      const audioBase64 = btoa(String.fromCharCode(...new Uint8Array(audioArrayBuffer)));
-      const uri = `data:audio/mp3;base64,${audioBase64}`;
-      
-      setAudioUri(uri);
+      const audioUri = await textToSpeech(translation, "nova");
+      setAudioUri(audioUri);
       setIsDownloading(false);
       player.play();
-      
     } catch (error) {
-      console.error("Error fetching or playing audio:", error);
+      setIsDownloading(false);
+      console.error("Error generating or playing audio:", error);
     }
   };
 
