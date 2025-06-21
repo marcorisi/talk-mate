@@ -18,6 +18,8 @@ export default function Card({ language, text, isTranslated = false }: CardProps
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [audioUri, setAudioUri] = useState<string | null>(null);
+    const [textToPlay, setTextToPlay] = useState<string>(text || '');
+    const [cachedText, setCachedText] = useState<string>(textToPlay || ''); // Track what text was used for current audio
     const [shouldPlayAfterLoad, setShouldPlayAfterLoad] = useState(false);
     const player = useAudioPlayer(audioUri);
     const playerStatus = useAudioPlayerStatus(player);
@@ -55,6 +57,13 @@ export default function Card({ language, text, isTranslated = false }: CardProps
         }
     }, [playerStatus.playing]);
 
+    
+    if (text !== cachedText && cachedText !== '') {
+        console.log("Text changed, clearing cached audio");
+        setAudioUri(null);
+        setCachedText('');
+    }
+
     const stop = async () => {
         try {
             player.pause();
@@ -73,16 +82,34 @@ export default function Card({ language, text, isTranslated = false }: CardProps
             return;
         }
 
+        // Check if we already have audio for this exact text
+        if (audioUri && cachedText === text) {
+            console.log("Using cached audio for same text");
+            try {
+                player.play();
+                setIsPlaying(true);
+                return;
+            } catch (error) {
+                console.error("Error playing cached audio:", error);
+                // If cached audio fails, fall through to generate new audio
+                setAudioUri(null);
+                setCachedText('');
+            }
+        }
+
+        // Generate new audio only if text is different or no cached audio exists
+        console.log("Generating new audio for text:", text);
         setIsLoading(true);
         try {
             const voice = "nova";
             const uri = await textToSpeech(text, voice);
             setAudioUri(uri);
-            setShouldPlayAfterLoad(true); // Flag to play once audio is loaded
+            setCachedText(text); // Cache the text used for this audio
+            setShouldPlayAfterLoad(true);
             setIsLoading(false);
         } catch (error) {
-            console.error("Error playing audio:", error);
-            Alert.alert("Error", "Failed to play audio");
+            console.error("Error generating audio:", error);
+            Alert.alert("Error", "Failed to generate audio");
             setIsLoading(false);
             setIsPlaying(false);
             setShouldPlayAfterLoad(false);
