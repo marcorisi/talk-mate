@@ -70,6 +70,7 @@ export default function TranslationApp() {
       setTranscribedText("")
       setTranslatedText("")
 
+      // addsPunctuation: true - feels like it doesn't work
       ExpoSpeechRecognitionModule.start({
         lang: langCode,
         interimResults: true,
