@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button, ScrollView, Text, View, StyleSheet } from "react-native";
 import { translateText, textToSpeech } from "@/src/openai";
 import { colors } from "@/src/colors";
+import { logger } from "@/src/utils";
 import { useAudioPlayer } from "expo-audio";
 
 function PlayerPlayground() {
@@ -23,7 +24,7 @@ function PlayerPlayground() {
     setTranscript(event.results[0]?.transcript);
   });
   useSpeechRecognitionEvent("error", (event) => {
-    console.log("error code:", event.error, "error message:", event.message);
+    logger.log("error code:", event.error, "error message:", event.message);
   });
 
   const handleStart = async () => {

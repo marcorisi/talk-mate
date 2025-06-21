@@ -2,6 +2,7 @@ import { useState } from "react"
 import { View, Text, StyleSheet, SafeAreaView, ScrollView } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { Language, Speaker } from "@/src/domain"
+import { logger } from "@/src/utils"
 import {
   ExpoSpeechRecognitionModule,
   useSpeechRecognitionEvent,
@@ -45,7 +46,7 @@ export default function TranslationApp() {
     setTranscribedText(event.results[0]?.transcript || "")
   })
   useSpeechRecognitionEvent("error", (event) => {
-    console.log("Speech recognition error:", event.error, event.message)
+    logger.log("Speech recognition error:", event.error, event.message)
     setIsRecording(false)
   })
 

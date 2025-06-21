@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAudioPlayer, useAudioPlayerStatus } from 'expo-audio';
 import IsPlayingCardFooter from './IsPlayingCardFooter';
 import { textToSpeech } from '@/src/openai';
+import { logger } from '@/src/utils';
 
 import { Language } from '@/src/domain';
 import { colors } from '@/src/colors';
@@ -50,16 +51,16 @@ export default function Card({ language, text, isTranslated = false }: CardProps
     useEffect(() => {
         if (playerStatus.playing) {
             setIsPlaying(true);
-            console.log("Audio is playing");
+            logger.log("Player status changed: Audio is playing");
         } else {
             setIsPlaying(false);
-            console.log("Audio is paused or stopped");
+            logger.log("Audio is paused or stopped");
         }
     }, [playerStatus.playing]);
 
     
     if (text !== cachedText && cachedText !== '') {
-        console.log("Text changed, clearing cached audio");
+        logger.log("Text changed, clearing cached audio");
         setAudioUri(null);
         setCachedText('');
     }
@@ -84,7 +85,7 @@ export default function Card({ language, text, isTranslated = false }: CardProps
 
         // Check if we already have audio for this exact text
         if (audioUri && cachedText === text) {
-            console.log("Using cached audio for same text");
+            logger.log("Using cached audio for same text");
             try {
                 player.play();
                 setIsPlaying(true);
@@ -98,7 +99,7 @@ export default function Card({ language, text, isTranslated = false }: CardProps
         }
 
         // Generate new audio only if text is different or no cached audio exists
-        console.log("Generating new audio for text:", text);
+        logger.log("Generating new audio for text:", text);
         setIsLoading(true);
         try {
             const voice = "nova";
