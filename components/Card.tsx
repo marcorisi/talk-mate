@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAudioPlayer } from 'expo-audio';
 import IsPlayingCardFooter from './IsPlayingCardFooter';
 import { textToSpeech } from '@/src/openai';
@@ -18,17 +18,47 @@ export default function Card({ language, text, isTranslated = false }: CardProps
     const [isPlaying, setIsPlaying] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [audioUri, setAudioUri] = useState<string | null>(null);
+    const [shouldPlayAfterLoad, setShouldPlayAfterLoad] = useState(false);
     const player = useAudioPlayer(audioUri);
 
     const textLabel = isTranslated ? "Translation" : "Original";
 
+    // Effect to play audio once it's loaded
+    useEffect(() => {
+        if (audioUri && shouldPlayAfterLoad) {
+            const playAudio = async () => {
+                try {
+                    // Small delay to ensure audio is fully loaded
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    player.play();
+                    setIsPlaying(true);
+                    setShouldPlayAfterLoad(false);
+                    
+                    // Estimate duration and auto-stop
+                    const estimatedDuration = Math.max(text?.length ? text.length * 100 : 2000, 2000);
+                    setTimeout(() => {
+                        setIsPlaying(false);
+                    }, estimatedDuration);
+                } catch (error) {
+                    console.error("Error playing audio:", error);
+                    setIsPlaying(false);
+                    setShouldPlayAfterLoad(false);
+                }
+            };
+            
+            playAudio();
+        }
+    }, [audioUri, shouldPlayAfterLoad]);
+
     const stop = async () => {
         try {
-            await player.pause();
+            player.pause();
             setIsPlaying(false);
+            setShouldPlayAfterLoad(false);
         } catch (error) {
             console.error("Error stopping audio:", error);
             setIsPlaying(false);
+            setShouldPlayAfterLoad(false);
         }
     };
 
@@ -40,27 +70,17 @@ export default function Card({ language, text, isTranslated = false }: CardProps
 
         setIsLoading(true);
         try {
-            const voice = "nova"
+            const voice = "nova";
             const uri = await textToSpeech(text, voice);
             setAudioUri(uri);
+            setShouldPlayAfterLoad(true); // Flag to play once audio is loaded
             setIsLoading(false);
-            setIsPlaying(true);
-            
-            player.play();
-            
-            // Listen for when audio finishes playing
-            // Note: You might need to add event listeners to detect when audio ends
-            // For now, we'll use a simple timeout based on estimated reading time
-            const estimatedDuration = Math.max(text.length * 100, 2000); // Rough estimate
-            setTimeout(() => {
-                setIsPlaying(false);
-            }, estimatedDuration);
-            
         } catch (error) {
             console.error("Error playing audio:", error);
             Alert.alert("Error", "Failed to play audio");
             setIsLoading(false);
             setIsPlaying(false);
+            setShouldPlayAfterLoad(false);
         }
     };
 
