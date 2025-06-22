@@ -40,7 +40,7 @@ npx expo start
 
 ## 🏗️ Build
 
-If you want a development build, so that you can try the app eg with the hot reload using your decive, run:
+If you want a development build, so that you can try the app e.g. with hot reload using your device, run:
 
 ```bash 
 $ eas build --profile development --platform android --local
