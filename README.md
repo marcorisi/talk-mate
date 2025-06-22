@@ -24,6 +24,11 @@ And then activate your expo server
 $ npx expo start
 ```
 
+If you want to run a development build on your Android emulator instead, run:
+```bash
+$ npx expo run:android
+```
+
 Otherwise, if you want to have a "standalone" build, run 
 
 ```bash
