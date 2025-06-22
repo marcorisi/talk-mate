@@ -87,6 +87,7 @@ export default function Card({ language, text, isTranslated = false }: CardProps
         if (audioUri && cachedText === text) {
             logger.log("Using cached audio for same text");
             try {
+                player.seekTo(0);
                 player.play();
                 setIsPlaying(true);
                 return;
